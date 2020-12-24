@@ -48,28 +48,80 @@ def print_data(filename):
     f=open(filename,"r")
     data=f.read()
     print(data)
+    f.close()
 
 def append_file(filename):
+    lista=[]
+    inputFile(filename,lista)
     f=open(filename,"a")
     name=input("Kérem egy hegység nevét: ")
-    search_name()
+    exist=search_name(lista,name,filename)
+    if exist:
+        name=input("Kérem egy másik hegység nevét: ")
     hight=input("Kérem a legmagasabb csúcs magasságát (m): ")
     f.write(name+"\t"+hight+"\n")
     print(filename+" bővült a következő sorral: "+name+"\t"+hight)
+    f.close()
 
-def search_in_file():
-    print("Mit keressünk? \n\t1 - Legalacsonyabb hegység \n\t2 - Legmagasabb hegység \n\t3 - Hegység neve \n\t4 - Magasság")
+def search_in_file(filename):
+    print("\t1 - Legalacsonyabb hegység \n\t2 - Legmagasabb hegység \n\t3 - Hegység neve \n\t4 - Magasság")
+    choise=input("Mit keressünk? ")
+    lista=[]
+    inputFile(filename,lista)
+    if choise=="1":
+        search_min(lista)
+    elif choise=="2":
+        search_max(lista)
+    elif choise=="3":
+        txt="Adja meg a kivánt hegység nevét ékezet nélkül (Pl.: Mount Everest): "
+        name=input("\t"+txt)
+        search_name(lista,name)
+    elif choise=="4":
+        search_hight(lista)
 
-def search_min():
-    pass
+def search_min(lista):
+    minindex=0
+    for i in range(len(lista)):
+        if(lista[i][1]<=lista[minindex][1]):
+            minindex=i
+    print(lista[minindex])
 
-def search_max():
-    pass
+def search_max(lista):
+    maxindex=0
+    for i in range(len(lista)):
+        if(lista[i][1]>=lista[maxindex][1]):
+            maxindex=i
+    print(lista[maxindex])
 
-def search_name():
-    pass
+def search_name(lista,name,filename):
+    for i in range(0,len(lista),1):
+        if(name==lista[i][0]):
+            exist=True
+            print(lista[i])
+        else:
+            print("Még nincs ilyen nevű hegy rögzítve.")
+            exist=False
+            append=input("Szeretné hozzáadni? (igen/nem)")
+            if append=="igen":
+                append_file(filename)
+    return exist
 
-def search_hight():
-    pass
+def search_hight(lista):
+    txt="Adja meg a kívánt magasságot méterben: "
+    value=int(input("\t"+txt))
+    for i in range(0,len(lista),1):
+        if(value==lista[i][1]):
+            print(lista[i])
+        elif value+[x for x in range(50)]<=lista[i][1]:
+            print(lista[i])
+        elif value+[x for x in range(50)]>=lista[i][1]:
+            print(lista[i])
+
+def inputFile(filename,lista):
+    f = open(filename,"r")
+    for sor in f:
+        sor=sor[:-1].split(";")
+        lista.append([str(sor[0]),int(sor[1])])
+    f.close()
 
 main()
