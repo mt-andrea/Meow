@@ -128,20 +128,24 @@ def search_hight(lista):
             print(lista[i])
         elif value<lista[i][1]:
             larger.append(lista[i])
+
         elif value>lista[i][1]:
             smaler.append(lista[i])
+
     if smaler!=[] and larger!=[]:
         S_ind=0
-        for _ in range(len(smaler)):
-            if smaler[_][1]>smaler[S_ind][1]:
-                S_ind=_
-                txt="Nem találtunk a keresésnek megfelelő elemet, de itt a hozzá legközelebb eső kisebb értékű: "+smaler[S_ind][0]+": "+smaler[S_ind][1]+" m"
-                print("\t"+txt)
+        for ind in range(len(smaler)):
+            if smaler[ind][1]>smaler[S_ind][1]:
+                S_ind=ind
+        txt="Nem találtunk a keresésnek megfelelő elemet, de itt a hozzá legközelebb eső kisebb értékű: "+smaler[S_ind][0]+": "+str(smaler[S_ind][1])+" m"
+        print("\t"+txt)
         L_ind=0
-        for j in range(len(larger)):
-            if larger[j][1]<larger[j][1]:
-                L_ind=j
-                txt="és a hozzá legközelebb eső nagyobb értékű: "+larger[L_ind][0]+": "+smaler[L_ind][1]+" m"
+        for ind in range(len(larger)):
+            if larger[ind][1]<larger[L_ind][1]:
+                L_ind=ind
+        txt="és a hozzá legközelebb eső nagyobb értékű: "+larger[L_ind][0]+": "+str(larger[L_ind][1])+" m"
+        print("\t"+txt)
+
 def inputFile(filename,lista):
     f = open(filename,"r")
     for sor in f:
