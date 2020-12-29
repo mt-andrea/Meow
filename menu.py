@@ -50,16 +50,18 @@ def print_data(filename):
     print(data)
     f.close()
 
-def append_file(filename):
+def append_file(filename,name=""):
     lista=[]
     inputFile(filename,lista)
     f=open(filename,"a")
-    name=input("Kérem egy hegység nevét: ")
-    exist=search_name(lista,name,filename)
-    if exist:
-        name=input("Kérem egy másik hegység nevét: ")
+    if name=="":
+        name=input("Kérem egy hegység nevét: ")
+        exist=name_exist(lista,name)
+        while exist:
+            name=input("Kérem egy másik hegység nevét: ")
+            exist=name_exist(lista,name)
     hight=input("Kérem a legmagasabb csúcs magasságát (m): ")
-    f.write(name+"\t"+hight+"\n")
+    f.write(name+";"+hight+"\n")
     print(filename+" bővült a következő sorral: "+name+"\t"+hight)
     f.close()
 
@@ -75,7 +77,7 @@ def search_in_file(filename):
     elif choise=="3":
         txt="Adja meg a kivánt hegység nevét ékezet nélkül (Pl.: Mount Everest): "
         name=input("\t"+txt)
-        search_name(lista,name)
+        search_name(lista,name,filename)
     elif choise=="4":
         search_hight(lista)
 
@@ -93,30 +95,53 @@ def search_max(lista):
             maxindex=i
     print(lista[maxindex])
 
-def search_name(lista,name,filename):
+def search_name(lista,name,filename): 
     for i in range(0,len(lista),1):
         if(name==lista[i][0]):
             exist=True
             print(lista[i])
+            break
         else:
-            print("Még nincs ilyen nevű hegy rögzítve.")
             exist=False
-            append=input("Szeretné hozzáadni? (igen/nem)")
-            if append=="igen":
-                append_file(filename)
+    if not exist:
+        append=input("Szeretné hozzáadni? (igen/nem)")
+        if append=="igen":
+            append_file(filename,name)
+
+
+def name_exist(lista,name): 
+    for i in range(0,len(lista),1):
+        if(name==lista[i][0]):
+            exist=True
+            break
+        else:
+            exist=False
     return exist
 
 def search_hight(lista):
+    smaler=[]
+    larger=[]
     txt="Adja meg a kívánt magasságot méterben: "
     value=int(input("\t"+txt))
     for i in range(0,len(lista),1):
         if(value==lista[i][1]):
             print(lista[i])
-        elif value+[x for x in range(50)]<=lista[i][1]:
-            print(lista[i])
-        elif value+[x for x in range(50)]>=lista[i][1]:
-            print(lista[i])
-
+        elif value<lista[i][1]:
+            larger.append(lista[i])
+        elif value>lista[i][1]:
+            smaler.append(lista[i])
+    if smaler!=[] and larger!=[]:
+        S_ind=0
+        for _ in range(len(smaler)):
+            if smaler[_][1]>smaler[S_ind][1]:
+                S_ind=_
+                txt="Nem találtunk a keresésnek megfelelő elemet, de itt a hozzá legközelebb eső kisebb értékű: "+smaler[S_ind][0]+": "+smaler[S_ind][1]+" m"
+                print("\t"+txt)
+        L_ind=0
+        for j in range(len(larger)):
+            if larger[j][1]<larger[j][1]:
+                L_ind=j
+                txt="és a hozzá legközelebb eső nagyobb értékű: "+larger[L_ind][0]+": "+smaler[L_ind][1]+" m"
 def inputFile(filename,lista):
     f = open(filename,"r")
     for sor in f:
